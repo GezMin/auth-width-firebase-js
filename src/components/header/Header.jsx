@@ -18,6 +18,10 @@ const Header = () => {
         }
     }, [])
 
+    const logAuthUser = () => {
+        auth.signOut()
+    }
+
     console.log(authUser)
 
     return (
@@ -31,9 +35,9 @@ const Header = () => {
                         <>
                             <span>{authUser.email}</span>
                             <Link
-                                href='/login'
+                                href='#'
                                 className='text-white cursor-pointer'
-                                onClick={() => auth.signOut()}
+                                onClick={logAuthUser}
                             >
                                 Log Out
                             </Link>

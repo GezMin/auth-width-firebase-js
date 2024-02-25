@@ -2,12 +2,14 @@
 import { useState } from 'react'
 import { auth } from '@/configFirebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
 
 const SingUp = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [copyPassword, setCopyPassword] = useState('')
     const [error, setError] = useState('')
+    const router = useRouter()
 
     const registerUser = e => {
         e.preventDefault()
@@ -25,7 +27,8 @@ const SingUp = () => {
                 setPassword('')
                 setCopyPassword('')
                 setError('')
-                console.log(user)
+                router.push('/login')
+                // console.log(user)
             })
             .catch(error => {
                 setError(error.message)

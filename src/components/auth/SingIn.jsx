@@ -2,11 +2,13 @@
 import { auth } from '@/configFirebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const SingIn = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const router = useRouter()
 
     const logInUser = e => {
         e.preventDefault()
@@ -18,7 +20,8 @@ const SingIn = () => {
                 setEmail('')
                 setPassword('')
                 setError('')
-                console.log(user)
+                router.push('/')
+                // console.log(user)
             })
             .catch(error => {
                 setError(error.message)
