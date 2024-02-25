@@ -25,7 +25,7 @@ const Header = () => {
     console.log(authUser)
 
     return (
-        <header className='w-full flex justify-center items-center h-12 bg-slate-600 '>
+        <header className='w-full flex justify-center items-center h-14 bg-slate-600 '>
             <div className='sm:container sm:mx-auto w-full flex justify-between items-center space-x-5 px-3'>
                 <Link href='/' className='text-white text-2xl font-bold  '>
                     YOU LOGO
@@ -33,10 +33,10 @@ const Header = () => {
                 <div className='flex items-center space-x-5'>
                     {authUser ? (
                         <>
-                            <span>{authUser.email}</span>
+                            <span className=' underline'>{authUser.email}</span>
                             <Link
                                 href='#'
-                                className='text-white cursor-pointer'
+                                className='text-white cursor-pointer  hover:bg-slate-800 p-2  rounded-full shadow-md'
                                 onClick={logAuthUser}
                             >
                                 Log Out
@@ -45,7 +45,7 @@ const Header = () => {
                     ) : (
                         <Link
                             href='/login'
-                            className='text-white cursor-pointer'
+                            className='text-white cursor-pointer  hover:bg-slate-800 p-2  rounded-full shadow-md'
                         >
                             Log In
                         </Link>
@@ -53,7 +53,7 @@ const Header = () => {
                     {!authUser ? (
                         <Link
                             href='/singup'
-                            className='text-white cursor-pointer'
+                            className='text-white cursor-pointer  bg-slate-700 hover:bg-slate-800 p-2  rounded-full shadow-md'
                         >
                             Sing Up
                         </Link>
