@@ -1,44 +1,66 @@
 'use client'
 import { useState } from 'react'
-import { auth } from '@/configFirebase'
+import { FIREBASE_AUTH, FIREBASE_DB } from '@/firebaseConfig'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
 
-const SingUp = () => {
+const SignUp = () => {
+    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [copyPassword, setCopyPassword] = useState('')
     const [error, setError] = useState('')
     const router = useRouter()
 
-    const registerUser = e => {
+    const saveDataToUser = async userUID => {
+        const userDocRef = doc(FIREBASE_DB, 'users', userUID)
+        try {
+            await setDoc(userDocRef, {
+                // можно добавить любые  данные по умолчанию в firestore
+                name,
+                money: 5000, // default value
+                createdAt: serverTimestamp(),
+                address: '',
+            })
+        } catch (error) {
+            console.error('Error saving user data:', error)
+        }
+    }
+
+    const registerUser = async e => {
         e.preventDefault()
 
-        if (password !== copyPassword) {
-            setError('Passwords do not match')
-            return
+        try {
+            const userCredential = await createUserWithEmailAndPassword(
+                FIREBASE_AUTH,
+                email,
+                password,
+            )
+            const user = userCredential.user
+            setName('')
+            setEmail('')
+            setPassword('')
+            setCopyPassword('')
+            setError('')
+            await saveDataToUser(user.uid)
+            router.push('/')
+        } catch (error) {
+            setError(error.message)
         }
-
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(userCredential => {
-                // Signed in
-                const user = userCredential.user
-                setEmail('')
-                setPassword('')
-                setCopyPassword('')
-                setError('')
-                router.push('/login')
-                // console.log(user)
-            })
-            .catch(error => {
-                setError(error.message)
-            })
     }
 
     return (
         <div className='w-full h-[90vh] flex justify-center items-center '>
             <div className='flex flex-col justify-center item-center gap-3 border w-[320px] border-slate-600 p-10 m-3'>
                 <h1 className='text-2xl'>Registration</h1>
+                <input
+                    value={name}
+                    className='p-2 text-black'
+                    type='text'
+                    placeholder='Name or nickname'
+                    onChange={e => setName(e.target.value)}
+                />
                 <input
                     value={email}
                     className='p-2 text-black'
@@ -73,4 +95,4 @@ const SingUp = () => {
     )
 }
 
-export default SingUp
+export default SignUp

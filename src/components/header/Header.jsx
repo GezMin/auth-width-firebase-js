@@ -1,28 +1,35 @@
 'use client'
-import { auth } from '@/configFirebase'
+import { FIREBASE_AUTH } from '@/firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+
 const Header = () => {
     const [authUser, setAuthUser] = useState(null)
+
     useEffect(() => {
-        const listener = onAuthStateChanged(auth, user => {
+        const listener = onAuthStateChanged(FIREBASE_AUTH, user => {
             if (user) {
                 setAuthUser(user)
             } else {
                 setAuthUser(null)
             }
         })
+
         return () => {
             listener()
         }
     }, [])
 
     const logAuthUser = () => {
-        auth.signOut()
+        FIREBASE_AUTH.signOut()
+            .then(() => {
+                setAuthUser(null)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
-
-    console.log(authUser)
 
     return (
         <header className='w-full flex justify-center items-center h-14 bg-slate-600 '>
@@ -30,10 +37,16 @@ const Header = () => {
                 <Link href='/' className='text-white text-2xl font-bold  '>
                     YOU LOGO
                 </Link>
+
                 <div className='flex items-center space-x-5'>
                     {authUser ? (
                         <>
-                            <span className=' underline'>{authUser.email}</span>
+                            <Link
+                                href='/profile'
+                                className='cursor-pointer underline'
+                            >
+                                {authUser.email}
+                            </Link>
                             <Link
                                 href='#'
                                 className='text-white cursor-pointer  hover:bg-slate-800 p-2  rounded-full shadow-md'

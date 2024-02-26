@@ -1,5 +1,5 @@
 'use client'
-import { auth } from '@/configFirebase'
+import { FIREBASE_AUTH } from '@/firebaseConfig'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -13,15 +13,13 @@ const SingIn = () => {
     const logInUser = e => {
         e.preventDefault()
 
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
             .then(userCredential => {
-                // Signed in
                 const user = userCredential.user
                 setEmail('')
                 setPassword('')
                 setError('')
                 router.push('/')
-                // console.log(user)
             })
             .catch(error => {
                 setError(error.message)
